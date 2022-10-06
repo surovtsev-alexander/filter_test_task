@@ -1,3 +1,7 @@
+print-%  : ; @echo $* = $($*)
+
+#region: build filter
+
 CC 		=gcc
 
 CFLAGS 		=-c -Wall -I$(INCLUDE_DIR)
@@ -22,9 +26,30 @@ $(BUILD_DIR)/$(EXECUTABLE): $(OBJECTS)
 $(OBJECTS): $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 	$(CC) -o $@ $< $(CFLAGS)
 
+#endregion: build filer
+
+
+#region: perform tests
+
+TEST_DIR 			=./tests
+TEST_INPUT_FILES 		=$(wildcard $(TEST_DIR)/*.input)
+TEST_EXPECTED_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.input,$(TEST_DIR)/%.expected_result,$(TEST_INPUT_FILES))
+TEST_ACTUAL_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.input,$(BUILD_DIR)/%.result,$(TEST_INPUT_FILES))
+TEST_COMPARSION_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.input,$(BUILD_DIR)/%.diff,$(TEST_INPUT_FILES))
+
+test: all clean_test $(TEST_COMPARSION_RESULT_FILES)
+
+$(TEST_COMPARSION_RESULT_FILES): $(BUILD_DIR)/%.diff: $(TEST_DIR)/%.expected_result $(BUILD_DIR)/%.result
+	diff $(word 1,$^) $(word 2,$^) > $@ || true
+
+$(TEST_ACTUAL_RESULT_FILES): $(BUILD_DIR)/%.result: $(TEST_DIR)/%.input
+	cat $< | $(BUILD_DIR)/$(EXECUTABLE) > $@
+
+clean_test:
+	rm -f $(TEST_ACTUAL_RESULT_FILES) $(TEST_COMPARSION_RESULT_FILES)
+
+#endregion: perform tests
 
 clean:
 	rm -rf $(BUILD_DIR)
-
-print-%  : ; @echo $* = $($*)
 
