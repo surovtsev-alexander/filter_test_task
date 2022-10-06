@@ -1,18 +1,12 @@
-#include "../include/ab.h"
+#include "../include/filter_logic.h"
+
 
 #include <stdio.h>
 
 int main()
 {
-  printf("starting\n");
+  int filtering_ret_code = filter_pipe();
 
-  a();
-  b();
-
-  int r = printf("finishing\n");
-
-  printf("result: %d", r);
-
-  return 0;
+  return filtering_ret_code;
 }
 
