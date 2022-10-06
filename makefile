@@ -11,7 +11,7 @@ INCLUDE_DIR 	=./include
 BUILD_DIR 	=./build
 
 SOURCES 	=$(wildcard $(SOURCE_DIR)/*.c)
-OBJECTS 	=$(patsubst $(SOURCE_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
+OBJECTS 	=$(patsubst $(SOURCE_DIR)/%.c, 	$(BUILD_DIR)/%.o, 	$(SOURCES))
 
 EXECUTABLE 	=filter.exe
 
@@ -33,9 +33,9 @@ $(OBJECTS): $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 
 TEST_DIR 			=./tests
 TEST_INPUT_FILES 		=$(wildcard $(TEST_DIR)/*.input)
-TEST_EXPECTED_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.input,$(TEST_DIR)/%.expected_result,$(TEST_INPUT_FILES))
-TEST_ACTUAL_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.input,$(BUILD_DIR)/%.result,$(TEST_INPUT_FILES))
-TEST_COMPARSION_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.input,$(BUILD_DIR)/%.diff,$(TEST_INPUT_FILES))
+TEST_EXPECTED_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.input, 	$(TEST_DIR)/%.expected_result, 	$(TEST_INPUT_FILES))
+TEST_ACTUAL_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.input, 	$(BUILD_DIR)/%.result, 		$(TEST_INPUT_FILES))
+TEST_COMPARSION_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.input, 	$(BUILD_DIR)/%.diff, 		$(TEST_INPUT_FILES))
 
 TEST_COMPARSION_RESULT_MERGED 	=$(BUILD_DIR)/test.merged_diff
 
