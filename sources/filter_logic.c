@@ -31,8 +31,8 @@ int filter_pipe()
         {
           if (PREV_CHAR_SLASH == prev_char)
           {
-            puts("\n\nFILTER_STATE_ONE_LINE_COMMENT:\n\n");
             filter_state = FILTER_STATE_ONE_LINE_COMMENT;
+            putchar(SYMBOL_SLASH);
           }
           else
           {
@@ -43,16 +43,16 @@ int filter_pipe()
         {
           if (PREV_CHAR_SLASH == prev_char)
           {
-            puts("\n\nFILTER_STATE_MULTILINE_COMMENT\n\n");
             filter_state = FILTER_STATE_MULTILINE_COMMENT;
+            putchar(SYMBOL_SLASH);
           }
         }
         break;
       case FILTER_STATE_ONE_LINE_COMMENT:
         if (SYMBOL_NEW_LINE == c)
         {
-          puts("\n\nFILTER_STATE_ONE_LINE_COMMENT -> FILTER_STATE_IDLE:\n\n");
           filter_state = FILTER_STATE_IDLE;
+          putchar(SYMBOL_NEW_LINE);
         }
         break;
       case FILTER_STATE_MULTILINE_COMMENT:
@@ -64,8 +64,10 @@ int filter_pipe()
         {
           if (PREV_CHAR_ASTERISK == prev_char)
           {
-            puts("\n\nFILTER_STATE_MULTILINE_COMMENT -> FILTER_STATE_IDLE:\n\n");
             filter_state = FILTER_STATE_IDLE;
+            putchar(SYMBOL_ASTERISK);
+            putchar(SYMBOL_SLASH);
+            putchar(SYMBOL_NEW_LINE);
             prev_char_new_value = PREV_CHAR_UNINTERESTING;
           }
         }
@@ -82,7 +84,10 @@ int filter_pipe()
 
     prev_char = prev_char_new_value;
 
-    putchar(c);
+    if (FILTER_STATE_IDLE != filter_state)
+    {
+      putchar(c);
+    }
   }
 
   empty_memory();
