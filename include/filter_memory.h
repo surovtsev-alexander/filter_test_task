@@ -6,7 +6,7 @@
 
 typedef struct memory_chunk_s {
   char                  data[FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS];
-  int                   position;
+  int                   next_pos;
 
   struct memory_chunk_s *prev;
   struct memory_chunk_s *next;
@@ -15,8 +15,7 @@ typedef struct memory_chunk_s {
 
 void                    empty_memory();
 filter_ret_code_t       store_char(char c);
-void                    print_memory_reversely();
-void                    to_start();
+filter_ret_code_t       print_memory_reversely();
 
 #endif // FILTER_MEMORY_H
 

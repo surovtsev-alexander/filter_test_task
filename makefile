@@ -5,6 +5,7 @@ print-%  : ; @echo $* = $($*)
 CC 		=gcc
 
 CFLAGS 		=-c -Wall -I$(INCLUDE_DIR)
+LINKING_C_FLAGS =-Wl,-Map -Wl,mapfile -Wl,--cref
 
 SOURCE_DIR 	=./sources
 INCLUDE_DIR 	=./include
@@ -21,7 +22,8 @@ dir:
 	mkdir -p $(BUILD_DIR)
 
 $(BUILD_DIR)/$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(OBJECTS) -o $@
+	$(CC) $(OBJECTS) -o $@ $(LINKING_C_FLAGS)
+	mv -f mapfile $(BUILD_DIR)/mapfile; true
 
 $(OBJECTS): $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 	$(CC) -o $@ $< $(CFLAGS)
@@ -40,17 +42,18 @@ TEST_COMPARSION_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.input, 	$(BUILD_DIR)/%.d
 TEST_COMPARSION_RESULT_MERGED 	=$(BUILD_DIR)/test.merged_diff
 
 test: all clean_test $(TEST_COMPARSION_RESULT_MERGED)
-	printf "\testing results:\n\n"
+	printf "\ntesting results:\n\n"
 	cat $(TEST_COMPARSION_RESULT_MERGED)
+	mv -f $(EXECUTABLE).stackdump $(BUILD_DIR)/$(EXECUTABLE).stackdump || true
 
 $(TEST_COMPARSION_RESULT_MERGED): $(TEST_COMPARSION_RESULT_FILES)
 	tail -n +1 $(BUILD_DIR)/*.diff > $(TEST_COMPARSION_RESULT_MERGED)
 
 $(TEST_COMPARSION_RESULT_FILES): $(BUILD_DIR)/%.diff: $(TEST_DIR)/%.expected_result $(BUILD_DIR)/%.result
-	diff $(word 1,$^) $(word 2,$^) > $@ || true
+	diff --strip-trailing-cr $(word 1,$^) $(word 2,$^) > $@ || true
 
 $(TEST_ACTUAL_RESULT_FILES): $(BUILD_DIR)/%.result: $(TEST_DIR)/%.input
-	cat $< | $(BUILD_DIR)/$(EXECUTABLE) > $@
+	cat $< | $(BUILD_DIR)/$(EXECUTABLE) > $@ || true
 
 clean_test:
 	rm -f $(TEST_ACTUAL_RESULT_FILES) $(TEST_COMPARSION_RESULT_FILES)

@@ -4,6 +4,7 @@
 #include "../include/filter_ret_code.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 
 // region: local varibles
@@ -13,8 +14,8 @@ memory_chunk_t *current_memory_chunk    = NULL;
 // endregion: local variables
 
 
-#warning "remove"
-#include <stdio.h>
+memory_chunk_t* create_empty_memory_chunk();
+
 
 void empty_memory()
 {
@@ -40,20 +41,124 @@ void empty_memory()
 
 filter_ret_code_t store_char(char c)
 {
-  putchar(c);
+  if (NULL == head_memory_chunk)
+  {
+    head_memory_chunk = create_empty_memory_chunk();
+
+    if (NULL == head_memory_chunk)
+    {
+      return FILTER_RET_CODE_INTERNAL_NO_MEMORY_001;
+    }
+    current_memory_chunk = head_memory_chunk;
+  }
+
+  int next_pos = current_memory_chunk->next_pos;
+  if (FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS < next_pos)
+  {
+    return FILTER_RET_CODE_INTERNAL_ERROR_002;
+  }
+
+  if (FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS == next_pos)
+  {
+    if (NULL == current_memory_chunk->next)
+    {
+      memory_chunk_t *new_memory_chunk = create_empty_memory_chunk();
+      if (NULL == new_memory_chunk)
+      {
+        return FILTER_RET_CODE_INTERNAL_NO_MEMORY_002;
+      }
+      new_memory_chunk->next_pos      = 0;
+      new_memory_chunk->prev          = current_memory_chunk;
+      new_memory_chunk->next          = NULL;
+
+      current_memory_chunk->next      = new_memory_chunk;
+
+      current_memory_chunk            = new_memory_chunk;
+    }
+    else
+    {
+      current_memory_chunk            = current_memory_chunk->next;
+      current_memory_chunk->next_pos  = 0;
+    }
+  }
+
+  current_memory_chunk->data[current_memory_chunk->next_pos] = c;
+  current_memory_chunk->next_pos++;
 
   return FILTER_RET_CODE_NO_ERROR;
 }
 
-void print_memory_reversely()
+filter_ret_code_t print_memory_reversely()
 {
+  char need_new_line = false;
+  while (true)
+  {
+    if (NULL == current_memory_chunk)
+    {
+      break;
+    }
 
-#warning "print new line if there is at least one char in the memory"
-  putchar(SYMBOL_NEW_LINE);
-  to_start();
+    int next_pos = current_memory_chunk->next_pos;
+    if (FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS < next_pos)
+    {
+      return FILTER_RET_CODE_INTERNAL_ERROR_003;
+    }
+
+    if (0 == next_pos && current_memory_chunk == head_memory_chunk)
+    {
+      return FILTER_RET_CODE_NO_ERROR;
+    }
+
+    char *data = current_memory_chunk->data;
+
+    while (true)
+    {
+      if (0 >= next_pos)
+      {
+        break;
+      }
+      need_new_line = true;
+      next_pos--;
+      putchar(data[next_pos]);
+    }
+
+    if (current_memory_chunk == head_memory_chunk)
+    {
+      head_memory_chunk->next_pos = 0;
+      break;
+    }
+    else
+    {
+      current_memory_chunk = current_memory_chunk->prev;
+
+      if (0 == current_memory_chunk->next_pos)
+      {
+        return FILTER_RET_CODE_INTERNAL_ERROR_004;
+      }
+    }
+  }
+
+  if (need_new_line)
+  {
+    putchar(SYMBOL_NEW_LINE);
+  }
+
+  return FILTER_RET_CODE_NO_ERROR;
 }
 
-void to_start()
+memory_chunk_t* create_empty_memory_chunk()
 {
+  memory_chunk_t *new_memory_chunk = malloc(sizeof(memory_chunk_t));
+
+  if (NULL == new_memory_chunk)
+  {
+    return NULL;
+  }
+
+  new_memory_chunk->next_pos = 0;
+  new_memory_chunk->prev     = NULL;
+  new_memory_chunk->next     = NULL;
+
+  return new_memory_chunk;
 }
 
