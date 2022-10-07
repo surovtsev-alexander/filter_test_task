@@ -1,6 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#define FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS 1000
 
 #endif // CONFIG_H
 
