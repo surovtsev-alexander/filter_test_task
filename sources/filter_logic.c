@@ -69,7 +69,6 @@ filter_ret_code_t filter_pipe()
           {
             filter_state = FILTER_STATE_IDLE;
             putchar(SYMBOL_SLASH);
-            putchar(SYMBOL_ASTERISK);
             print_memory_reversely();
             prev_char_new_value = PREV_CHAR_UNINTERESTING;
           }

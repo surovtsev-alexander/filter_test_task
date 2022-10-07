@@ -50,6 +50,7 @@ void print_memory_reversely()
 
 #warning "print new line if there is at least one char in the memory"
   putchar(SYMBOL_NEW_LINE);
+  to_start();
 }
 
 void to_start()
