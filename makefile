@@ -44,7 +44,8 @@ TEST_COMPARSION_RESULT_MERGED 	=$(BUILD_DIR)/test.merged_diff
 test: all clean_test $(TEST_COMPARSION_RESULT_MERGED)
 	printf "\ntesting results:\n\n"
 	cat $(TEST_COMPARSION_RESULT_MERGED)
-	mv -f $(EXECUTABLE).stackdump $(BUILD_DIR)/$(EXECUTABLE).stackdump || true
+	printf "\n"
+	mv -f $(EXECUTABLE).stackdump $(BUILD_DIR)/$(EXECUTABLE).stackdump 2> /dev/null || true
 
 $(TEST_COMPARSION_RESULT_MERGED): $(TEST_COMPARSION_RESULT_FILES)
 	tail -n +1 $(BUILD_DIR)/*.diff > $(TEST_COMPARSION_RESULT_MERGED)
