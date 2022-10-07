@@ -26,7 +26,7 @@ $(BUILD_DIR)/$(EXECUTABLE): $(OBJECTS)
 $(OBJECTS): $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 	$(CC) -o $@ $< $(CFLAGS)
 
-#endregion: build filer
+#endregion: build filter
 
 
 #region: perform tests // testing framework

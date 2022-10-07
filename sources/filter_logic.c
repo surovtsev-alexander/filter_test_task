@@ -19,6 +19,8 @@ int filter_pipe()
       break;
     }
 
+    
+
     putchar(c);
   }
 
