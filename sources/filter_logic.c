@@ -1,5 +1,5 @@
 #include "../include/filter_logic.h"
-#include "../include/filter_error_codes.h"
+#include "../include/filter_ret_code.h"
 #include "../include/filter_state.h"
 #include "../include/filter_memory.h"
 #include "../include/symbols.h"
@@ -7,11 +7,12 @@
 
 #include <stdio.h>
 
-int filter_pipe()
+
+filter_ret_code_t filter_pipe()
 {
-  char c;
-  char prev_char_new_value;
-  int ret_code = FILTER_NO_ERROR;
+  char                  c;
+  char                  prev_char_new_value;
+  filter_ret_code_t     ret_code                = FILTER_RET_CODE_NO_ERROR;
 
   while (true)
   {
@@ -32,7 +33,8 @@ int filter_pipe()
           if (PREV_CHAR_SLASH == prev_char)
           {
             filter_state = FILTER_STATE_ONE_LINE_COMMENT;
-            store_char(SYMBOL_SLASH);
+            ret_code = store_char(SYMBOL_SLASH);
+            break;
           }
           else
           {
@@ -44,7 +46,8 @@ int filter_pipe()
           if (PREV_CHAR_SLASH == prev_char)
           {
             filter_state = FILTER_STATE_MULTILINE_COMMENT;
-            store_char(SYMBOL_SLASH);
+            ret_code = store_char(SYMBOL_SLASH);
+            break;
           }
         }
         break;
@@ -73,11 +76,11 @@ int filter_pipe()
         }
         break;
       default:
-        ret_code = FILTER_INTERNAL_ERROR_001;
+        ret_code = FILTER_RET_CODE_INTERNAL_ERROR_001;
         break;
     }
 
-    if (ret_code != FILTER_NO_ERROR)
+    if (FILTER_RET_CODE_NO_ERROR != ret_code)
     {
       break;
     }
@@ -86,7 +89,12 @@ int filter_pipe()
 
     if (FILTER_STATE_IDLE != filter_state)
     {
-      store_char(c);
+      ret_code = store_char(c);
+
+      if (FILTER_RET_CODE_NO_ERROR != ret_code)
+      {
+        break;
+      }
     }
   }
 

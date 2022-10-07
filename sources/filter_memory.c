@@ -1,6 +1,7 @@
 #include "../include/filter_memory.h"
 #include "../include/common.h"
 #include "../include/symbols.h"
+#include "../include/filter_ret_code.h"
 
 #include <stdlib.h>
 
@@ -37,9 +38,11 @@ void empty_memory()
 }
 
 
-void store_char(char c)
+filter_ret_code_t store_char(char c)
 {
   putchar(c);
+
+  return FILTER_RET_CODE_NO_ERROR;
 }
 
 void print_memory_reversely()
