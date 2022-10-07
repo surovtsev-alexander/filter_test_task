@@ -11,6 +11,7 @@ int filter_pipe()
 {
   char c;
   char prev_char_new_value;
+  int ret_code = FILTER_NO_ERROR;
 
   while (true)
   {
@@ -70,8 +71,13 @@ int filter_pipe()
         }
         break;
       default:
-        empty_memory();
-        return INTERNAL_ERROR_001;
+        ret_code = FILTER_INTERNAL_ERROR_001;
+        break;
+    }
+
+    if (ret_code != FILTER_NO_ERROR)
+    {
+      break;
     }
 
     prev_char = prev_char_new_value;
@@ -81,6 +87,6 @@ int filter_pipe()
 
   empty_memory();
 
-  return FILTER_NO_ERROR;
+  return ret_code;
 }
 
