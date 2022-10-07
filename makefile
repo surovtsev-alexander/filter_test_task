@@ -2,14 +2,15 @@ print-%  : ; @echo $* = $($*)
 
 #region: build filter
 
-CC 		=gcc
-
-CFLAGS 		=-c -Wall -I$(INCLUDE_DIR)
-LINKING_C_FLAGS =-Wl,-Map -Wl,mapfile -Wl,--cref
-
 SOURCE_DIR 	=./sources
 INCLUDE_DIR 	=./include
 BUILD_DIR 	=./build
+
+CC 		=gcc
+
+CFLAGS 		=-c -Wall -I$(INCLUDE_DIR)
+LINKING_C_FLAGS =-Xlinker -Map=$(BUILD_DIR)/filter.map
+
 
 SOURCES 	=$(wildcard $(SOURCE_DIR)/*.c)
 OBJECTS 	=$(patsubst $(SOURCE_DIR)/%.c, 	$(BUILD_DIR)/%.o, 	$(SOURCES))
@@ -23,7 +24,6 @@ dir:
 
 $(BUILD_DIR)/$(EXECUTABLE): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $@ $(LINKING_C_FLAGS)
-	mv -f mapfile $(BUILD_DIR)/mapfile; true
 
 $(OBJECTS): $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 	$(CC) -o $@ $< $(CFLAGS)
