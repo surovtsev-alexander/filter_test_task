@@ -4,12 +4,18 @@
 #include "./filter_config.h"
 
 typedef struct memory_chunk_s {
-  char data[FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS];
+  char                  data[FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS];
+  int                   position;
 
   struct memory_chunk_s *prev;
   struct memory_chunk_s *next;
 } memory_chunk;
 
+
+void empty_memory();
+void store_char(char c);
+void print_memory_reversely();
+void to_start();
 
 #endif // FILTER_MEMORY_H
 

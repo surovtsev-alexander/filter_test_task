@@ -1,8 +1,8 @@
+#include "../include/filter_error_codes.h"
 #include "../include/filter_logic.h"
+#include "../include/common.h"
 
 #include <stdio.h>
-
-#include <stdbool.h>
 
 int filter_pipe()
 {
@@ -23,3 +23,4 @@ int filter_pipe()
 
   return FILTER_NO_ERROR;
 }
+
