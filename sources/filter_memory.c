@@ -1,5 +1,6 @@
 #include "../include/filter_memory.h"
 #include "../include/common.h"
+#include "../include/symbols.h"
 
 #include <stdlib.h>
 
@@ -10,6 +11,9 @@ memory_chunk_t *head_memory_chunk       = NULL;
 memory_chunk_t *current_memory_chunk    = NULL;
 // endregion: local variables
 
+
+#warning "remove"
+#include <stdio.h>
 
 void empty_memory()
 {
@@ -35,10 +39,14 @@ void empty_memory()
 
 void store_char(char c)
 {
+  putchar(c);
 }
 
 void print_memory_reversely()
 {
+
+#warning "print new line if there is at least one char in the memory"
+  putchar(SYMBOL_NEW_LINE);
 }
 
 void to_start()

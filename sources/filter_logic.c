@@ -32,7 +32,7 @@ int filter_pipe()
           if (PREV_CHAR_SLASH == prev_char)
           {
             filter_state = FILTER_STATE_ONE_LINE_COMMENT;
-            putchar(SYMBOL_SLASH);
+            store_char(SYMBOL_SLASH);
           }
           else
           {
@@ -44,7 +44,7 @@ int filter_pipe()
           if (PREV_CHAR_SLASH == prev_char)
           {
             filter_state = FILTER_STATE_MULTILINE_COMMENT;
-            putchar(SYMBOL_SLASH);
+            store_char(SYMBOL_SLASH);
           }
         }
         break;
@@ -52,7 +52,7 @@ int filter_pipe()
         if (SYMBOL_NEW_LINE == c)
         {
           filter_state = FILTER_STATE_IDLE;
-          putchar(SYMBOL_NEW_LINE);
+          print_memory_reversely();
         }
         break;
       case FILTER_STATE_MULTILINE_COMMENT:
@@ -65,9 +65,9 @@ int filter_pipe()
           if (PREV_CHAR_ASTERISK == prev_char)
           {
             filter_state = FILTER_STATE_IDLE;
-            putchar(SYMBOL_ASTERISK);
             putchar(SYMBOL_SLASH);
-            putchar(SYMBOL_NEW_LINE);
+            putchar(SYMBOL_ASTERISK);
+            print_memory_reversely();
             prev_char_new_value = PREV_CHAR_UNINTERESTING;
           }
         }
@@ -86,9 +86,11 @@ int filter_pipe()
 
     if (FILTER_STATE_IDLE != filter_state)
     {
-      putchar(c);
+      store_char(c);
     }
   }
+
+  print_memory_reversely();
 
   empty_memory();
 
