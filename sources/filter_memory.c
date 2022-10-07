@@ -5,16 +5,16 @@
 
 
 // region: local varibles
-memory_chunk *head_memory_chunk         = NULL;
+memory_chunk_t *head_memory_chunk       = NULL;
 
-memory_chunk *current_memory_chunk      = NULL;
+memory_chunk_t *current_memory_chunk    = NULL;
 // endregion: local variables
 
 
 void empty_memory()
 {
-  memory_chunk *curr    = head_memory_chunk;
-  memory_chunk *tmp     = NULL;
+  memory_chunk_t *curr  = head_memory_chunk;
+  memory_chunk_t *tmp   = NULL;
 
   while (true)
   {
@@ -37,10 +37,6 @@ void store_char(char c)
 {
 }
 
-void store_char()
-{
-}
-
 void print_memory_reversely()
 {
 }
@@ -48,3 +44,4 @@ void print_memory_reversely()
 void to_start()
 {
 }
+

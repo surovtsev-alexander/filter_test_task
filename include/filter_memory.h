@@ -9,7 +9,7 @@ typedef struct memory_chunk_s {
 
   struct memory_chunk_s *prev;
   struct memory_chunk_s *next;
-} memory_chunk;
+} memory_chunk_t;
 
 
 void empty_memory();
