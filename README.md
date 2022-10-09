@@ -12,6 +12,7 @@
 Type `make test` to build project and perform tests from './tests' folder.
 
 'filter.exe' will appear in './build' folder if the project is build by `make` or `make test` commands.
+
 ---
 ## Features
 
