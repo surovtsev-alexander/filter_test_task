@@ -67,9 +67,7 @@ filter_ret_code_t store_char(char c)
       {
         return FILTER_RET_CODE_INTERNAL_NO_MEMORY_002;
       }
-      new_memory_chunk->stored_symbols = 0;
       new_memory_chunk->prev           = current_memory_chunk;
-      new_memory_chunk->next           = NULL;
 
       current_memory_chunk->next       = new_memory_chunk;
 
@@ -90,6 +88,8 @@ filter_ret_code_t store_char(char c)
 
 filter_ret_code_t print_memory_reversely()
 {
+  int need_new_line = false;
+
   while (true)
   {
     if (NULL == current_memory_chunk)
@@ -110,14 +110,14 @@ filter_ret_code_t print_memory_reversely()
 
     char *data = current_memory_chunk->data;
 
-
     if (0 < stored_symbols)
     {
       printf(
-          "%.*s\n",
+          "%.*s",
           stored_symbols,
           data + (FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS - stored_symbols)
       );
+      need_new_line = true;
     }
 
     if (current_memory_chunk == head_memory_chunk)
@@ -129,11 +129,16 @@ filter_ret_code_t print_memory_reversely()
     {
       current_memory_chunk = current_memory_chunk->prev;
 
-      if (0 == current_memory_chunk->stored_symbols)
+      if (FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS != current_memory_chunk->stored_symbols)
       {
         return FILTER_RET_CODE_INTERNAL_ERROR_004;
       }
     }
+  }
+
+  if (need_new_line)
+  {
+    putchar(SYMBOL_NEW_LINE);
   }
 
   return FILTER_RET_CODE_NO_ERROR;
