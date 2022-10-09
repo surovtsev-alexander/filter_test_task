@@ -24,6 +24,7 @@ filter_ret_code_t filter_pipe()
     }
 
 
+    // ignore that symbol to avoid confusion with \r\n and \n\r
     if (SYMBOL_CARRIAGE_RETURN == c)
     {
       continue;
