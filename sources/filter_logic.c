@@ -63,10 +63,6 @@ filter_ret_code_t filter_pipe()
         {
           filter_state = FILTER_STATE_IDLE;
           ret_code = print_memory_reversely();
-          if (FILTER_RET_CODE_NO_ERROR != ret_code)
-          {
-            break;
-          }
         }
         break;
       case FILTER_STATE_MULTILINE_COMMENT:
@@ -82,10 +78,6 @@ filter_ret_code_t filter_pipe()
             putchar(SYMBOL_SLASH);
             ret_code = print_memory_reversely();
             prev_char_new_value = PREV_CHAR_UNINTERESTING;
-            if (FILTER_RET_CODE_NO_ERROR != ret_code)
-            {
-              break;
-            }
           }
         }
         break;
@@ -112,7 +104,10 @@ filter_ret_code_t filter_pipe()
     }
   }
 
-  ret_code = print_memory_reversely();
+  if (FILTER_RET_CODE_NO_ERROR == ret_code)
+  {
+    ret_code = print_memory_reversely();
+  }
 
   empty_memory();
 
