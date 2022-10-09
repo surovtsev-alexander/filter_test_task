@@ -6,7 +6,7 @@
 
 typedef struct memory_chunk_s {
   char                  data[FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS];
-  int                   next_pos;
+  int                   stored_symbols;
 
   struct memory_chunk_s *prev;
   struct memory_chunk_s *next;

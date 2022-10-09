@@ -52,13 +52,13 @@ filter_ret_code_t store_char(char c)
     current_memory_chunk = head_memory_chunk;
   }
 
-  int next_pos = current_memory_chunk->next_pos;
-  if (FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS < next_pos)
+  int stored_symbols = current_memory_chunk->stored_symbols;
+  if (FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS < stored_symbols)
   {
     return FILTER_RET_CODE_INTERNAL_ERROR_002;
   }
 
-  if (FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS == next_pos)
+  if (FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS == stored_symbols)
   {
     if (NULL == current_memory_chunk->next)
     {
@@ -67,23 +67,23 @@ filter_ret_code_t store_char(char c)
       {
         return FILTER_RET_CODE_INTERNAL_NO_MEMORY_002;
       }
-      new_memory_chunk->next_pos      = 0;
-      new_memory_chunk->prev          = current_memory_chunk;
-      new_memory_chunk->next          = NULL;
+      new_memory_chunk->stored_symbols = 0;
+      new_memory_chunk->prev           = current_memory_chunk;
+      new_memory_chunk->next           = NULL;
 
-      current_memory_chunk->next      = new_memory_chunk;
+      current_memory_chunk->next       = new_memory_chunk;
 
-      current_memory_chunk            = new_memory_chunk;
+      current_memory_chunk             = new_memory_chunk;
     }
     else
     {
-      current_memory_chunk            = current_memory_chunk->next;
-      current_memory_chunk->next_pos  = 0;
+      current_memory_chunk                 = current_memory_chunk->next;
+      current_memory_chunk->stored_symbols = 0;
     }
   }
 
-  current_memory_chunk->data[current_memory_chunk->next_pos] = c;
-  current_memory_chunk->next_pos++;
+  current_memory_chunk->data[current_memory_chunk->stored_symbols] = c;
+  current_memory_chunk->stored_symbols++;
 
   return FILTER_RET_CODE_NO_ERROR;
 }
@@ -98,13 +98,13 @@ filter_ret_code_t print_memory_reversely()
       break;
     }
 
-    int next_pos = current_memory_chunk->next_pos;
-    if (FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS < next_pos)
+    int stored_symbols = current_memory_chunk->stored_symbols;
+    if (FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS < stored_symbols)
     {
       return FILTER_RET_CODE_INTERNAL_ERROR_003;
     }
 
-    if (0 == next_pos && current_memory_chunk == head_memory_chunk)
+    if (0 == stored_symbols && current_memory_chunk == head_memory_chunk)
     {
       return FILTER_RET_CODE_NO_ERROR;
     }
@@ -113,25 +113,25 @@ filter_ret_code_t print_memory_reversely()
 
     while (true)
     {
-      if (0 >= next_pos)
+      if (0 >= stored_symbols)
       {
         break;
       }
       need_new_line = true;
-      next_pos--;
-      putchar(data[next_pos]);
+      stored_symbols--;
+      putchar(data[stored_symbols]);
     }
 
     if (current_memory_chunk == head_memory_chunk)
     {
-      head_memory_chunk->next_pos = 0;
+      head_memory_chunk->stored_symbols = 0;
       break;
     }
     else
     {
       current_memory_chunk = current_memory_chunk->prev;
 
-      if (0 == current_memory_chunk->next_pos)
+      if (0 == current_memory_chunk->stored_symbols)
       {
         return FILTER_RET_CODE_INTERNAL_ERROR_004;
       }
@@ -155,9 +155,9 @@ memory_chunk_t* create_empty_memory_chunk()
     return NULL;
   }
 
-  new_memory_chunk->next_pos = 0;
-  new_memory_chunk->prev     = NULL;
-  new_memory_chunk->next     = NULL;
+  new_memory_chunk->stored_symbols      = 0;
+  new_memory_chunk->prev                = NULL;
+  new_memory_chunk->next                = NULL;
 
   return new_memory_chunk;
 }
