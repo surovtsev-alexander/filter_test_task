@@ -5,6 +5,7 @@
 #include "./filter_ret_code.h"
 
 typedef struct memory_chunk_s {
+  // symbols are stored in a reverse manner
   char                  data[FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS];
   int                   stored_symbols;
 

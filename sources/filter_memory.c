@@ -82,7 +82,7 @@ filter_ret_code_t store_char(char c)
     }
   }
 
-  current_memory_chunk->data[current_memory_chunk->stored_symbols] = c;
+  current_memory_chunk->data[FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS - 1 - current_memory_chunk->stored_symbols] = c;
   current_memory_chunk->stored_symbols++;
 
   return FILTER_RET_CODE_NO_ERROR;
@@ -119,7 +119,7 @@ filter_ret_code_t print_memory_reversely()
       }
       need_new_line = true;
       stored_symbols--;
-      putchar(data[stored_symbols]);
+      putchar(data[FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS - 1 - stored_symbols]);
     }
 
     if (current_memory_chunk == head_memory_chunk)
