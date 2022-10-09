@@ -15,10 +15,10 @@ Type `make test` to build project and perform tests from './tests' folder.
 ---
 ## Features
 
-'./build/filter.map' file.
+'./build/filter.map' file is generated during program linking to simplify further debugging.
 
---
+---
 ## Tuning
 
-Change value of `FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS` in './include/filter_config.h' to 
+Change value of `FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS` in './include/filter_config.h' to vary length of string stored in one chunk of data.
 

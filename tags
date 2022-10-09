@@ -4,10 +4,74 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-AB_H	ab.h	4;"	d
-a	a.c	/^void a()$/;"	f
-a	ab.h	/^void a();$/;"	p
-b	ab.h	/^void b();$/;"	p
-b	b.c	/^void b()$/;"	f
-main	main.c	/^int main()$/;"	f
+BUILD_DIR	makefile	/^BUILD_DIR 	=.\/build$/;"	m
+CC	makefile	/^CC 		=gcc$/;"	m
+CFLAGS	makefile	/^CFLAGS 		=-c -Wall -I$(INCLUDE_DIR)$/;"	m
+COMMON_H	include/common.h	2;"	d
+CONFIG_H	include/filter_config.h	2;"	d
+EXECUTABLE	makefile	/^EXECUTABLE 	=filter.exe$/;"	m
+FILTER_LOGIC_H	include/filter_logic.h	2;"	d
+FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS	include/filter_config.h	4;"	d
+FILTER_MEMORY_H	include/filter_memory.h	2;"	d
+FILTER_RET_CODE_H	include/filter_ret_code.h	2;"	d
+FILTER_RET_CODE_INTERNAL_ERROR_001	include/filter_ret_code.h	11;"	d
+FILTER_RET_CODE_INTERNAL_ERROR_002	include/filter_ret_code.h	12;"	d
+FILTER_RET_CODE_INTERNAL_ERROR_003	include/filter_ret_code.h	13;"	d
+FILTER_RET_CODE_INTERNAL_ERROR_004	include/filter_ret_code.h	14;"	d
+FILTER_RET_CODE_INTERNAL_NO_MEMORY_001	include/filter_ret_code.h	15;"	d
+FILTER_RET_CODE_INTERNAL_NO_MEMORY_002	include/filter_ret_code.h	16;"	d
+FILTER_RET_CODE_NO_ERROR	include/filter_ret_code.h	8;"	d
+FILTER_RET_CODE_NO_MEMORY_ERROR	include/filter_ret_code.h	9;"	d
+FILTER_STATE_H	include/filter_state.h	2;"	d
+FILTER_STATE_IDLE	include/filter_state.h	/^  FILTER_STATE_IDLE,$/;"	e	enum:filter_state_e
+FILTER_STATE_MULTILINE_COMMENT	include/filter_state.h	/^  FILTER_STATE_MULTILINE_COMMENT,$/;"	e	enum:filter_state_e
+FILTER_STATE_ONE_LINE_COMMENT	include/filter_state.h	/^  FILTER_STATE_ONE_LINE_COMMENT,$/;"	e	enum:filter_state_e
+INCLUDE_DIR	makefile	/^INCLUDE_DIR 	=.\/include$/;"	m
+LINKING_C_FLAGS	makefile	/^LINKING_C_FLAGS =-Xlinker -Map=$(BUILD_DIR)\/filter.map$/;"	m
+OBJECTS	makefile	/^OBJECTS 	=$(patsubst $(SOURCE_DIR)\/%.c, 	$(BUILD_DIR)\/%.o, 	$(SOURCES))$/;"	m
+PREV_CHAR_ASTERISK	include/filter_state.h	/^  PREV_CHAR_ASTERISK,$/;"	e	enum:prev_char_e
+PREV_CHAR_SLASH	include/filter_state.h	/^  PREV_CHAR_SLASH,$/;"	e	enum:prev_char_e
+PREV_CHAR_UNINTERESTING	include/filter_state.h	/^  PREV_CHAR_UNINTERESTING,$/;"	e	enum:prev_char_e
+SOURCES	makefile	/^SOURCES 	=$(wildcard $(SOURCE_DIR)\/*.c)$/;"	m
+SOURCE_DIR	makefile	/^SOURCE_DIR 	=.\/sources$/;"	m
+SYMBOLS_H	include/symbols.h	2;"	d
+SYMBOL_ASTERISK	include/symbols.h	6;"	d
+SYMBOL_CARRIAGE_RETURN	include/symbols.h	8;"	d
+SYMBOL_NEW_LINE	include/symbols.h	7;"	d
+SYMBOL_SLASH	include/symbols.h	5;"	d
+TEST_ACTUAL_RESULT_FILES	makefile	/^TEST_ACTUAL_RESULT_FILES 	=$(patsubst $(TEST_DIR)\/%.input, 	$(BUILD_DIR)\/%.result, 		$(TEST_INPUT_FILES))$/;"	m
+TEST_COMPARSION_RESULT_FILES	makefile	/^TEST_COMPARSION_RESULT_FILES 	=$(patsubst $(TEST_DIR)\/%.input, 	$(BUILD_DIR)\/%.diff, 		$(TEST_INPUT_FILES))$/;"	m
+TEST_COMPARSION_RESULT_MERGED	makefile	/^TEST_COMPARSION_RESULT_MERGED 	=$(BUILD_DIR)\/test.merged_diff$/;"	m
+TEST_DIR	makefile	/^TEST_DIR 			=.\/tests$/;"	m
+TEST_EXPECTED_RESULT_FILES	makefile	/^TEST_EXPECTED_RESULT_FILES 	=$(patsubst $(TEST_DIR)\/%.input, 	$(TEST_DIR)\/%.expected_result, 	$(TEST_INPUT_FILES))$/;"	m
+TEST_INPUT_FILES	makefile	/^TEST_INPUT_FILES 		=$(wildcard $(TEST_DIR)\/*.input)$/;"	m
+create_empty_memory_chunk	sources/filter_memory.c	/^memory_chunk_t* create_empty_memory_chunk()$/;"	f
+create_empty_memory_chunk	sources/filter_memory.c	/^memory_chunk_t* create_empty_memory_chunk();$/;"	p	file:
+current_memory_chunk	sources/filter_memory.c	/^memory_chunk_t *current_memory_chunk    = NULL;$/;"	v
+data	include/filter_memory.h	/^  char                  data[FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS];$/;"	m	struct:memory_chunk_s	access:public
+empty_memory	include/filter_memory.h	/^void                    empty_memory();$/;"	p
+empty_memory	sources/filter_memory.c	/^void empty_memory()$/;"	f
+filter_pipe	include/filter_logic.h	/^int filter_pipe();$/;"	p
+filter_pipe	sources/filter_logic.c	/^filter_ret_code_t filter_pipe()$/;"	f
+filter_ret_code_t	include/filter_ret_code.h	/^typedef int                                     filter_ret_code_t;$/;"	t
+filter_state	sources/filter_state.c	/^filter_state_t  filter_state      = FILTER_STATE_IDLE;$/;"	v
+filter_state_e	include/filter_state.h	/^enum filter_state_e {$/;"	g
+filter_state_t	include/filter_state.h	/^typedef unsigned char filter_state_t;$/;"	t
+head_memory_chunk	sources/filter_memory.c	/^memory_chunk_t *head_memory_chunk       = NULL;$/;"	v
 main	sources/main.c	/^int main()$/;"	f
+memory_chunk_s	include/filter_memory.h	/^typedef struct memory_chunk_s {$/;"	s
+memory_chunk_s::data	include/filter_memory.h	/^  char                  data[FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS];$/;"	m	struct:memory_chunk_s	access:public
+memory_chunk_s::next	include/filter_memory.h	/^  struct memory_chunk_s *next;$/;"	m	struct:memory_chunk_s	typeref:struct:memory_chunk_s::memory_chunk_s	access:public
+memory_chunk_s::next_pos	include/filter_memory.h	/^  int                   next_pos;$/;"	m	struct:memory_chunk_s	access:public
+memory_chunk_s::prev	include/filter_memory.h	/^  struct memory_chunk_s *prev;$/;"	m	struct:memory_chunk_s	typeref:struct:memory_chunk_s::memory_chunk_s	access:public
+memory_chunk_t	include/filter_memory.h	/^} memory_chunk_t;$/;"	t	typeref:struct:memory_chunk_s
+next	include/filter_memory.h	/^  struct memory_chunk_s *next;$/;"	m	struct:memory_chunk_s	typeref:struct:memory_chunk_s::memory_chunk_s	access:public
+next_pos	include/filter_memory.h	/^  int                   next_pos;$/;"	m	struct:memory_chunk_s	access:public
+prev	include/filter_memory.h	/^  struct memory_chunk_s *prev;$/;"	m	struct:memory_chunk_s	typeref:struct:memory_chunk_s::memory_chunk_s	access:public
+prev_char	sources/filter_state.c	/^prev_char_t     prev_char         = PREV_CHAR_UNINTERESTING;$/;"	v
+prev_char_e	include/filter_state.h	/^enum prev_char_e {$/;"	g
+prev_char_t	include/filter_state.h	/^typedef unsigned char prev_char_t;$/;"	t
+print_memory_reversely	include/filter_memory.h	/^filter_ret_code_t       print_memory_reversely();$/;"	p
+print_memory_reversely	sources/filter_memory.c	/^filter_ret_code_t print_memory_reversely()$/;"	f
+store_char	include/filter_memory.h	/^filter_ret_code_t       store_char(char c);$/;"	p	signature:(char c)
+store_char	sources/filter_memory.c	/^filter_ret_code_t store_char(char c)$/;"	f	signature:(char c)
