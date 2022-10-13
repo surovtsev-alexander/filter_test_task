@@ -12,6 +12,7 @@ filter_ret_code_t filter_pipe()
 {
   char                  c;
   stored_char_t         stored_char_new_value;
+  filter_state_t        filter_state_new_value;
   filter_ret_code_t     ret_code                = FILTER_RET_CODE_NO_ERROR;
   token_t               token;
 
@@ -78,14 +79,62 @@ filter_ret_code_t filter_pipe()
         case SYMBOL_QUOTATION:
           token = TOKEN_QUOTATION;
           break;
+        case SYMBOL_NEW_LINE:
+          token = TOKEN_NEW_LINE;
+          break;
       }
     }
     stored_char = stored_char_new_value;
 
-    if (TOKEN_UNINTERESTING != token)
+    if (false && TOKEN_UNINTERESTING != token)
     {
       printf("TOKEN: %d\n", token);
     }
+
+    filter_state_new_value = filter_state;
+    switch(token)
+    {
+      case TOKEN_NEW_LINE:
+        if (FILTER_STATE_ONE_LINE_COMMENT == filter_state)
+        {
+          filter_state_new_value = FILTER_STATE_IDLE;
+        }
+        break;
+      case TOKEN_QUOTATION:
+        if (FILTER_STATE_STRING == filter_state)
+        {
+          filter_state_new_value = FILTER_STATE_IDLE;
+        }
+        else if (FILTER_STATE_IDLE == filter_state)
+        {
+          filter_state_new_value = FILTER_STATE_STRING;
+        }
+        break;
+      case TOKEN_SINGLE_LINE_COMMENT:
+        if (FILTER_STATE_IDLE == filter_state)
+        {
+          filter_state_new_value = FILTER_STATE_ONE_LINE_COMMENT;
+        }
+        break;
+      case TOKEN_MULTILINE_COMMENT_OPEN:
+        if (FILTER_STATE_IDLE == filter_state)
+        {
+          filter_state_new_value = FILTER_STATE_MULTILINE_COMMENT;
+        }
+        break;
+      case TOKEN_MULTILINE_COMMENT_CLOSE:
+        if (FILTER_STATE_MULTILINE_COMMENT == filter_state)
+        {
+          filter_state_new_value = FILTER_STATE_IDLE;
+        }
+        break;
+    }
+
+    if (true && filter_state_new_value != filter_state)
+    {
+      printf("filter_state: %d -> %d\n", filter_state, filter_state_new_value);
+    }
+    filter_state = filter_state_new_value;
 
     // TODO: remove this temporary solution
     continue;
