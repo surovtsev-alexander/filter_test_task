@@ -35,6 +35,7 @@ typedef unsigned char token_t;
 extern stored_char_t    stored_char;
 extern filter_state_t   filter_state;
 extern bool             shadowed_by_backslash;
+extern bool             candidate_slash_is_found;
 
 #endif // FILTER_STATE_H
 

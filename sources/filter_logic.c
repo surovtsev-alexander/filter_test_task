@@ -10,13 +10,14 @@
 
 token_t           calculate_token_by_next_char(char current_symbol);
 filter_state_t    calculate_filter_state_by_next_token(token_t token);
-filter_ret_code_t handle_filter_state_changing(
-    filter_state_t filter_state_new_value);
+filter_ret_code_t store_symbol_if_requred(char current_symbol);
+filter_ret_code_t print_memory_if_required();
 
 #define BREAK_IF_ERROR()                                \
 if (FILTER_RET_CODE_NO_ERROR != ret_code) break
 
-
+stored_char_t  stored_char_new_value  = STORED_CHAR_UNINTERESTING;
+filter_state_t filter_state_new_value = FILTER_STATE_IDLE;
 
 filter_ret_code_t filter_pipe()
 {
@@ -36,25 +37,20 @@ filter_ret_code_t filter_pipe()
     token_t token = calculate_token_by_next_char(c);
 
     // step 2
-    filter_state_t filter_state_new_value =
+    filter_state_new_value =
       calculate_filter_state_by_next_token(token);
 
     // step 3
-    // ignore that symbols to avoid confusion with \r\n and \n\r
-    if (SYMBOL_CARRIAGE_RETURN != c &&
-        !(SYMBOL_NEW_LINE == c &&
-          FILTER_STATE_IDLE == filter_state_new_value &&
-          (FILTER_STATE_ONE_LINE_COMMENT == filter_state ||
-           FILTER_STATE_MULTILINE_COMMENT == filter_state)))
-    {
-      ret_code = store_char(c);
-    }
+    ret_code = store_symbol_if_requred(c);
     BREAK_IF_ERROR();
 
-    ret_code = handle_filter_state_changing(
-        filter_state_new_value);
+
+    // step 4
+    ret_code = print_memory_if_required();
     BREAK_IF_ERROR();
 
+    // step 5
+    stored_char  = stored_char_new_value;
     filter_state = filter_state_new_value;
   }
 
@@ -73,9 +69,9 @@ filter_ret_code_t filter_pipe()
 
 token_t calculate_token_by_next_char(char current_symbol)
 {
-    token_t       res                   = TOKEN_UNINTERESTING;
-    stored_char_t stored_char_new_value = STORED_CHAR_UNINTERESTING;
+    token_t res = TOKEN_UNINTERESTING;
 
+    stored_char_new_value = STORED_CHAR_UNINTERESTING;
     if (shadowed_by_backslash)
     {
       switch(current_symbol)
@@ -105,13 +101,16 @@ token_t calculate_token_by_next_char(char current_symbol)
           {
             res = TOKEN_SINGLE_LINE_COMMENT;
           }
-          else if (STORED_CHAR_ASTERISK == stored_char)
+          else if (STORED_CHAR_ASTERISK == stored_char &&
+              FILTER_STATE_MULTILINE_COMMENT == filter_state)
           {
             res = TOKEN_MULTILINE_COMMENT_CLOSE;
           }
           else
           {
             forget_stored_symbols();
+            candidate_slash_is_found = true;
+
             stored_char_new_value = STORED_CHAR_SLASH;
           }
           break;
@@ -133,7 +132,6 @@ token_t calculate_token_by_next_char(char current_symbol)
           break;
       }
     }
-    stored_char = stored_char_new_value;
 
     return res;
 }
@@ -185,8 +183,44 @@ filter_state_t  calculate_filter_state_by_next_token(token_t token)
 }
 
 
-filter_ret_code_t handle_filter_state_changing(
-    filter_state_t filter_state_new_value)
+filter_ret_code_t store_symbol_if_requred(char current_symbol)
+{
+  filter_ret_code_t res = FILTER_RET_CODE_NO_ERROR;
+
+  if (STORED_CHAR_SLASH != stored_char_new_value ||
+      FILTER_STATE_IDLE != filter_state)
+  {
+    candidate_slash_is_found = false;
+  }
+
+  if (!candidate_slash_is_found &&
+      FILTER_STATE_IDLE == filter_state &&
+      FILTER_STATE_IDLE == filter_state_new_value)
+  {
+    return res;
+  }
+
+  // ignore that symbols to avoid confusion with \r\n and \n\r
+  if (SYMBOL_CARRIAGE_RETURN == current_symbol)
+  {
+    return res;
+  }
+
+  if (SYMBOL_NEW_LINE == current_symbol &&
+      FILTER_STATE_IDLE == filter_state_new_value &&
+      (FILTER_STATE_ONE_LINE_COMMENT == filter_state ||
+       FILTER_STATE_MULTILINE_COMMENT == filter_state))
+  {
+    return res;
+  }
+
+  res = store_char(current_symbol);
+
+  return res;
+}
+
+
+filter_ret_code_t print_memory_if_required()
 {
   filter_ret_code_t res = FILTER_RET_CODE_NO_ERROR;
 
