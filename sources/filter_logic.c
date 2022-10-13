@@ -36,11 +36,53 @@ filter_ret_code_t filter_pipe()
 
     filter_state_t filter_state_new_value = calculate_filter_state_by_next_token(token);
 
-    if (true && filter_state_new_value != filter_state)
+    if (false && filter_state_new_value != filter_state)
     {
       printf("filter_state: %d -> %d\n", filter_state, filter_state_new_value);
     }
+
+    if (filter_state_new_value != filter_state)
+    {
+      switch(filter_state_new_value)
+      {
+        case FILTER_STATE_IDLE:
+          if (FILTER_STATE_ONE_LINE_COMMENT == filter_state)
+          {
+            ret_code = print_memory_reversely();
+          }
+          else if (FILTER_STATE_MULTILINE_COMMENT == filter_state)
+          {
+            putchar(SYMBOL_SLASH);
+            ret_code = print_memory_reversely();
+          }
+          break;
+        case FILTER_STATE_ONE_LINE_COMMENT:
+        case FILTER_STATE_MULTILINE_COMMENT:
+          ret_code = store_char(SYMBOL_SLASH);
+          break;
+      }
+    }
     filter_state = filter_state_new_value;
+
+    if (FILTER_RET_CODE_NO_ERROR != ret_code)
+    {
+      break;
+    }
+
+    if (FILTER_STATE_ONE_LINE_COMMENT == filter_state ||
+        FILTER_STATE_MULTILINE_COMMENT == filter_state)
+    {
+      // ignore that symbol to avoid confusion with \r\n and \n\r
+      if (SYMBOL_CARRIAGE_RETURN != c)
+      {
+        ret_code = store_char(c);
+      }
+
+      if (FILTER_RET_CODE_NO_ERROR != ret_code)
+      {
+        break;
+      }
+    }
 
     // TODO: remove this temporary solution
     continue;
