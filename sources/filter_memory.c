@@ -49,7 +49,7 @@ void forget_stored_symbols()
 }
 
 
-filter_ret_code_t store_char(char c)
+filter_ret_code_t push_symbol(char symbol)
 {
   if (NULL == head_memory_chunk)
   {
@@ -90,7 +90,7 @@ filter_ret_code_t store_char(char c)
     }
   }
 
-  current_memory_chunk->data[FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS - 1 - current_memory_chunk->stored_symbols] = c;
+  current_memory_chunk->data[FILTER_MEMORY_CHUNK_DATA_SIZE_IN_CHARS - 1 - current_memory_chunk->stored_symbols] = symbol;
   current_memory_chunk->stored_symbols++;
 
   return FILTER_RET_CODE_NO_ERROR;

@@ -8,16 +8,17 @@
 #include <stdio.h>
 
 
-token_t           calculate_token_by_next_char(char current_symbol);
-filter_state_t    calculate_filter_state_by_next_token(token_t token);
-filter_ret_code_t store_symbol_if_required(char current_symbol);
-filter_ret_code_t print_memory_if_required();
+static token_t           calculate_token_by_next_char(char current_symbol);
+static filter_state_t    calculate_filter_state_by_next_token(token_t token);
+static filter_ret_code_t push_symbol_if_required(char current_symbol);
+static filter_ret_code_t print_memory_if_required();
 
 #define BREAK_IF_ERROR()                                \
 if (FILTER_RET_CODE_NO_ERROR != ret_code) break
 
-stored_char_t  stored_char_new_value  = STORED_CHAR_UNINTERESTING;
-filter_state_t filter_state_new_value = FILTER_STATE_IDLE;
+static stored_char_t  stored_char_new_value  = STORED_CHAR_UNINTERESTING;
+static filter_state_t filter_state_new_value = FILTER_STATE_IDLE;
+
 
 filter_ret_code_t filter_pipe()
 {
@@ -41,7 +42,7 @@ filter_ret_code_t filter_pipe()
       calculate_filter_state_by_next_token(token);
 
     // step 3
-    ret_code = store_symbol_if_required(c);
+    ret_code = push_symbol_if_required(c);
     BREAK_IF_ERROR();
 
     // step 4
@@ -66,7 +67,7 @@ filter_ret_code_t filter_pipe()
 }
 
 
-token_t calculate_token_by_next_char(char current_symbol)
+static token_t calculate_token_by_next_char(char current_symbol)
 {
   token_t res = TOKEN_UNINTERESTING;
 
@@ -141,7 +142,7 @@ token_t calculate_token_by_next_char(char current_symbol)
 }
 
 
-filter_state_t calculate_filter_state_by_next_token(token_t token)
+static filter_state_t calculate_filter_state_by_next_token(token_t token)
 {
   filter_state_t res = filter_state;
 
@@ -187,7 +188,7 @@ filter_state_t calculate_filter_state_by_next_token(token_t token)
 }
 
 
-filter_ret_code_t store_symbol_if_required(char current_symbol)
+static filter_ret_code_t push_symbol_if_required(char current_symbol)
 {
   filter_ret_code_t res = FILTER_RET_CODE_NO_ERROR;
 
@@ -218,13 +219,13 @@ filter_ret_code_t store_symbol_if_required(char current_symbol)
     return res;
   }
 
-  res = store_char(current_symbol);
+  res = push_symbol(current_symbol);
 
   return res;
 }
 
 
-filter_ret_code_t print_memory_if_required()
+static filter_ret_code_t print_memory_if_required()
 {
   filter_ret_code_t res = FILTER_RET_CODE_NO_ERROR;
 

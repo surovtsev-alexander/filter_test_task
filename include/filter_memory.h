@@ -16,7 +16,7 @@ typedef struct memory_chunk_s {
 
 void                    empty_memory();
 void                    forget_stored_symbols();
-filter_ret_code_t       store_char(char c);
+filter_ret_code_t       push_symbol(char symbol);
 filter_ret_code_t       print_memory_reversely();
 
 #endif // FILTER_MEMORY_H
