@@ -69,6 +69,8 @@ filter_ret_code_t filter_pipe()
 
 static token_t calculate_token_by_next_char(char current_symbol)
 {
+  static bool shadowed_by_backslash = false;
+
   token_t res = TOKEN_UNINTERESTING;
 
   stored_char_new_value = STORED_CHAR_UNINTERESTING;
