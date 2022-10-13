@@ -2,6 +2,8 @@
 #define SYMBOLS_H
 
 
+#define SYMBOL_QUOTATION        '"'
+#define SYMBOL_BACKSLASH        '\\'
 #define SYMBOL_SLASH            '/'
 #define SYMBOL_ASTERISK         '*'
 #define SYMBOL_NEW_LINE         '\n'
