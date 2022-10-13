@@ -21,8 +21,8 @@ if (FILTER_RET_CODE_NO_ERROR != ret_code) break
 
 filter_ret_code_t filter_pipe()
 {
-  char                  c;
-  filter_ret_code_t     ret_code                = FILTER_RET_CODE_NO_ERROR;
+  char               c;
+  filter_ret_code_t  ret_code = FILTER_RET_CODE_NO_ERROR;
 
   while (true)
   {
