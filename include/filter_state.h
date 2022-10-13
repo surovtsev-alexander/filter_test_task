@@ -1,10 +1,10 @@
 #ifndef FILTER_STATE_H
 #define FILTER_STATE_H
 
-enum prev_char_e {
-  PREV_CHAR_SLASH,
-  PREV_CHAR_ASTERISK,
-  PREV_CHAR_UNINTERESTING,
+enum stored_char_e {
+  STORED_CHAR_SLASH,
+  STORED_CHAR_ASTERISK,
+  STORED_CHAR_UNINTERESTING,
 };
 
 enum filter_state_e {
@@ -14,11 +14,11 @@ enum filter_state_e {
 };
 
 
-typedef unsigned char prev_char_t;
+typedef unsigned char stored_char_t;
 typedef unsigned char filter_state_t;
 
 
-extern prev_char_t      prev_char;
+extern stored_char_t    stored_char;
 extern filter_state_t   filter_state;
 
 

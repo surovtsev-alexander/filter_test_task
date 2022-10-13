@@ -11,7 +11,7 @@
 filter_ret_code_t filter_pipe()
 {
   char                  c;
-  char                  prev_char_new_value;
+  stored_char_t         stored_char_new_value;
   filter_ret_code_t     ret_code                = FILTER_RET_CODE_NO_ERROR;
 
   while (true)
@@ -30,14 +30,14 @@ filter_ret_code_t filter_pipe()
       continue;
     }
 
-    prev_char_new_value = PREV_CHAR_UNINTERESTING;
+    stored_char_new_value = STORED_CHAR_UNINTERESTING;
 
     switch(filter_state)
     {
       case FILTER_STATE_IDLE:
         if (SYMBOL_SLASH == c)
         {
-          if (PREV_CHAR_SLASH == prev_char)
+          if (STORED_CHAR_SLASH == stored_char)
           {
             filter_state = FILTER_STATE_ONE_LINE_COMMENT;
             ret_code = store_char(SYMBOL_SLASH);
@@ -45,12 +45,12 @@ filter_ret_code_t filter_pipe()
           }
           else
           {
-            prev_char_new_value = PREV_CHAR_SLASH;
+            stored_char_new_value = STORED_CHAR_SLASH;
           }
         }
         else if (SYMBOL_ASTERISK == c)
         {
-          if (PREV_CHAR_SLASH == prev_char)
+          if (STORED_CHAR_SLASH == stored_char)
           {
             filter_state = FILTER_STATE_MULTILINE_COMMENT;
             ret_code = store_char(SYMBOL_SLASH);
@@ -68,16 +68,16 @@ filter_ret_code_t filter_pipe()
       case FILTER_STATE_MULTILINE_COMMENT:
         if (SYMBOL_ASTERISK == c)
         {
-          prev_char_new_value = PREV_CHAR_ASTERISK;
+          stored_char_new_value = STORED_CHAR_ASTERISK;
         }
         else if (SYMBOL_SLASH == c)
         {
-          if (PREV_CHAR_ASTERISK == prev_char)
+          if (STORED_CHAR_ASTERISK == stored_char)
           {
             filter_state = FILTER_STATE_IDLE;
             putchar(SYMBOL_SLASH);
             ret_code = print_memory_reversely();
-            prev_char_new_value = PREV_CHAR_UNINTERESTING;
+            stored_char_new_value = STORED_CHAR_UNINTERESTING;
           }
         }
         break;
@@ -91,7 +91,7 @@ filter_ret_code_t filter_pipe()
       break;
     }
 
-    prev_char = prev_char_new_value;
+    stored_char = stored_char_new_value;
 
     if (FILTER_STATE_IDLE != filter_state)
     {
