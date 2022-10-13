@@ -107,14 +107,19 @@ token_t calculate_token_by_next_char(char current_symbol)
           }
           else
           {
-            forget_stored_symbols();
-            candidate_slash_is_found = true;
+            if (!(FILTER_STATE_ONE_LINE_COMMENT  == filter_state ||
+                  FILTER_STATE_MULTILINE_COMMENT == filter_state))
+            {
+              forget_stored_symbols();
+              candidate_slash_is_found = true;
+            }
 
             stored_char_new_value = STORED_CHAR_SLASH;
           }
           break;
         case SYMBOL_ASTERISK:
-          if (STORED_CHAR_SLASH == stored_char)
+          if (STORED_CHAR_SLASH == stored_char &&
+              FILTER_STATE_MULTILINE_COMMENT != filter_state)
           {
             res = TOKEN_MULTILINE_COMMENT_OPEN;
           }
@@ -136,7 +141,7 @@ token_t calculate_token_by_next_char(char current_symbol)
 }
 
 
-filter_state_t  calculate_filter_state_by_next_token(token_t token)
+filter_state_t calculate_filter_state_by_next_token(token_t token)
 {
   filter_state_t res = filter_state;
 
