@@ -34,10 +34,10 @@ $(OBJECTS): $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 #region: perform tests // testing framework
 
 TEST_DIR 			=./tests
-TEST_INPUT_FILES 		=$(wildcard $(TEST_DIR)/*.input)
-TEST_EXPECTED_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.input, 	$(TEST_DIR)/%.expected_result, 	$(TEST_INPUT_FILES))
-TEST_ACTUAL_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.input, 	$(BUILD_DIR)/%.result, 		$(TEST_INPUT_FILES))
-TEST_COMPARSION_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.input, 	$(BUILD_DIR)/%.diff, 		$(TEST_INPUT_FILES))
+TEST_INPUT_FILES 		=$(wildcard $(TEST_DIR)/*.c)
+TEST_EXPECTED_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.c, 	$(TEST_DIR)/%.expected_result, 	$(TEST_INPUT_FILES))
+TEST_ACTUAL_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.c, 	$(BUILD_DIR)/%.result, 		$(TEST_INPUT_FILES))
+TEST_COMPARSION_RESULT_FILES 	=$(patsubst $(TEST_DIR)/%.c, 	$(BUILD_DIR)/%.diff, 		$(TEST_INPUT_FILES))
 
 TEST_COMPARSION_RESULT_MERGED 	=$(BUILD_DIR)/test.merged_diff
 
@@ -52,7 +52,7 @@ $(TEST_COMPARSION_RESULT_MERGED): $(TEST_COMPARSION_RESULT_FILES)
 $(TEST_COMPARSION_RESULT_FILES): $(BUILD_DIR)/%.diff: $(TEST_DIR)/%.expected_result $(BUILD_DIR)/%.result
 	diff --strip-trailing-cr $(word 1,$^) $(word 2,$^) > $@ || true
 
-$(TEST_ACTUAL_RESULT_FILES): $(BUILD_DIR)/%.result: $(TEST_DIR)/%.input
+$(TEST_ACTUAL_RESULT_FILES): $(BUILD_DIR)/%.result: $(TEST_DIR)/%.c
 	cat $< | $(BUILD_DIR)/$(EXECUTABLE) > $@ || true
 
 clean_test:
