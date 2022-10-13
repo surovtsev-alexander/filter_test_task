@@ -10,7 +10,7 @@
 
 token_t           calculate_token_by_next_char(char current_symbol);
 filter_state_t    calculate_filter_state_by_next_token(token_t token);
-filter_ret_code_t store_symbol_if_requred(char current_symbol);
+filter_ret_code_t store_symbol_if_required(char current_symbol);
 filter_ret_code_t print_memory_if_required();
 
 #define BREAK_IF_ERROR()                                \
@@ -41,9 +41,8 @@ filter_ret_code_t filter_pipe()
       calculate_filter_state_by_next_token(token);
 
     // step 3
-    ret_code = store_symbol_if_requred(c);
+    ret_code = store_symbol_if_required(c);
     BREAK_IF_ERROR();
-
 
     // step 4
     ret_code = print_memory_if_required();
@@ -183,7 +182,7 @@ filter_state_t  calculate_filter_state_by_next_token(token_t token)
 }
 
 
-filter_ret_code_t store_symbol_if_requred(char current_symbol)
+filter_ret_code_t store_symbol_if_required(char current_symbol)
 {
   filter_ret_code_t res = FILTER_RET_CODE_NO_ERROR;
 
