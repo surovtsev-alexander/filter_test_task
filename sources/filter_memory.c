@@ -38,6 +38,16 @@ void empty_memory()
   current_memory_chunk  = NULL;
 }
 
+void forget_stored_symbols()
+{
+  if (NULL != head_memory_chunk)
+  {
+    head_memory_chunk->stored_symbols = 0;
+
+    current_memory_chunk = head_memory_chunk;
+  }
+}
+
 
 filter_ret_code_t store_char(char c)
 {

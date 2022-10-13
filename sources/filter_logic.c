@@ -12,7 +12,6 @@ token_t           calculate_token_by_next_char(char current_symbol);
 filter_state_t    calculate_filter_state_by_next_token(token_t token);
 filter_ret_code_t handle_filter_state_changing(
     filter_state_t filter_state_new_value);
-filter_ret_code_t push_symbol_to_memory(char current_symbol);
 
 #define BREAK_IF_ERROR()                                \
 if (FILTER_RET_CODE_NO_ERROR != ret_code) break
@@ -41,19 +40,27 @@ filter_ret_code_t filter_pipe()
       calculate_filter_state_by_next_token(token);
 
     // step 3
+    // ignore that symbols to avoid confusion with \r\n and \n\r
+    if (SYMBOL_CARRIAGE_RETURN != c &&
+        !(SYMBOL_NEW_LINE == c &&
+          FILTER_STATE_IDLE == filter_state_new_value &&
+          (FILTER_STATE_ONE_LINE_COMMENT == filter_state ||
+           FILTER_STATE_MULTILINE_COMMENT == filter_state)))
+    {
+      ret_code = store_char(c);
+    }
+    BREAK_IF_ERROR();
+
     ret_code = handle_filter_state_changing(
         filter_state_new_value);
+    BREAK_IF_ERROR();
 
     filter_state = filter_state_new_value;
-
-    BREAK_IF_ERROR();
-
-    // step 4
-    ret_code = push_symbol_to_memory(c);
-    BREAK_IF_ERROR();
   }
 
-  if (FILTER_RET_CODE_NO_ERROR == ret_code)
+  if (FILTER_RET_CODE_NO_ERROR == ret_code &&
+      (FILTER_STATE_ONE_LINE_COMMENT  == filter_state ||
+       FILTER_STATE_MULTILINE_COMMENT == filter_state))
   {
     ret_code = print_memory_reversely();
   }
@@ -104,6 +111,7 @@ token_t calculate_token_by_next_char(char current_symbol)
           }
           else
           {
+            forget_stored_symbols();
             stored_char_new_value = STORED_CHAR_SLASH;
           }
           break;
@@ -182,44 +190,18 @@ filter_ret_code_t handle_filter_state_changing(
 {
   filter_ret_code_t res = FILTER_RET_CODE_NO_ERROR;
 
-  if (filter_state_new_value != filter_state)
+  if (filter_state_new_value == filter_state ||
+      FILTER_STATE_IDLE != filter_state_new_value)
   {
-    switch(filter_state_new_value)
-    {
-      case FILTER_STATE_IDLE:
-        if (FILTER_STATE_ONE_LINE_COMMENT == filter_state)
-        {
-          res = print_memory_reversely();
-        }
-        else if (FILTER_STATE_MULTILINE_COMMENT == filter_state)
-        {
-          putchar(SYMBOL_SLASH);
-          res = print_memory_reversely();
-        }
-        break;
-      case FILTER_STATE_ONE_LINE_COMMENT:
-      case FILTER_STATE_MULTILINE_COMMENT:
-        res = store_char(SYMBOL_SLASH);
-        break;
-    }
+    return res;
   }
 
-  return res;
-}
-
-filter_ret_code_t push_symbol_to_memory(char current_symbol)
-{
-  filter_ret_code_t res = FILTER_RET_CODE_NO_ERROR;
-  
-  if (FILTER_STATE_ONE_LINE_COMMENT == filter_state ||
+  if (FILTER_STATE_ONE_LINE_COMMENT  == filter_state ||
       FILTER_STATE_MULTILINE_COMMENT == filter_state)
   {
-    // ignore that symbol to avoid confusion with \r\n and \n\r
-    if (SYMBOL_CARRIAGE_RETURN != current_symbol)
-    {
-      res = store_char(current_symbol);
-    }
+    res = print_memory_reversely();
   }
 
   return res;
 }
+
